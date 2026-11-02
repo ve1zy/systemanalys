@@ -393,7 +393,7 @@ COMMIT;
 4. без ошибок — строит diff (created/updated):
 
 ```
-Ответ 200: { "preview": { "created": 90, "updated": 10 }, "import_token": "<uuid>", "version": 1 } 
+Ответ 200: { "preview": { "created": 90, "updated": 10 }, "import_token": "<uuid>", "version": 1 }
 ```
 
 **3. UI показывает preview → модератор жмёт «Подтвердить».**
