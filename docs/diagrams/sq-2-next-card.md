@@ -21,7 +21,7 @@ sequenceDiagram
     Q-->>B: 06 · due-карточка / пусто
 
     alt [есть due-карточка]
-        Q->>Q: 07 · Взять самую раннюю; orientation = random
+        Q->>Q: 07 · Взять самую раннюю, orientation = random
         Q->>DB: 08 · UPDATE last_shown_at (опционально)
         Q-->>B: 09 · Карточка: stage N, orientation, due_at
         B-->>W: 10 · 200 {type: 'due', card, stage}

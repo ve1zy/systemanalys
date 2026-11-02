@@ -20,12 +20,12 @@ sequenceDiagram
 
     opt [ключ уже обработан]
         B-->>DB: 05 · existing result
-        B-->>W: 06 · 200 {replayed: true}; повтор не создаётся
+        B-->>W: 06 · 200 {replayed: true}, повтор не создаётся
         W->>W: 07 · Идемпотентный ответ (выход)
     end
 
     B->>R: 08 · Обработать успешное повторение
-    R->>DB: 09 · BEGIN; SELECT progress FOR UPDATE
+    R->>DB: 09 · BEGIN, SELECT progress FOR UPDATE
     DB-->>R: 10 · progress {stage: N, status: 'in_rotation'}
 
     alt [stage устарел / уже обработан]
@@ -35,7 +35,7 @@ sequenceDiagram
     else [stage актуален]
         R->>R: 14 · if N = 8 → memorized, иначе stage = N+1
         R->>R: 15 · next_at = now + interval[N+1]
-        R->>DB: 16 · UPDATE progress; INSERT history; COMMIT
+        R->>DB: 16 · UPDATE progress, INSERT history, COMMIT
         R-->>B: 17 · OK {status, next_at, learned}
         R-->>B: 18 · result
         B-->>W: 19 · 200 {next_at, learned, stats_delta}

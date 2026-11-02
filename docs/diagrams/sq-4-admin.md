@@ -21,19 +21,19 @@ sequenceDiagram
     P->>M: 05 · Редактор словаря
 
     opt 1 · Импорт XLS
-        M->>P: 06 · Загрузить .xlsx; режим merge/replace
+        M->>P: 06 · Загрузить .xlsx, режим merge/replace
         P->>B: 07 · POST /admin/import (multipart)
         B->>X: 08 · Parse + validate: columns, types, duplicates
         X-->>B: 09 · rows | errors[]
-        B->>DB: 10 · Preview + diff; import_token; audit
+        B->>DB: 10 · Preview + diff, import_token, audit
         alt [есть ошибки]
             B-->>P: 11 · 422 {row, column, reason}
-            P->>M: 12 · Отчёт; данные не изменены
+            P->>M: 12 · Отчёт, данные не изменены
         else [файл валиден]
-            B-->>P: 13 · 200 preview {created, updated}; показать в UI
+            B-->>P: 13 · 200 preview {created, updated}, показать в UI
             M->>P: 14 · Подтвердить импорт
             P->>B: 15 · POST /import/commit {import_token}
-            B->>DB: 16 · BEGIN; upsert; version++; audit; COMMIT
+            B->>DB: 16 · BEGIN, upsert, version++, audit, COMMIT
             B-->>P: 17 · 200 {imported_count, version}
             P->>M: 18 · Таблица обновлена
         end
@@ -42,12 +42,12 @@ sequenceDiagram
     opt 2 · Редактирование и сохранение
         M->>P: 19 · Изменить слово, нажать «Сохранить»
         P->>B: 20 · PATCH /words/{id}, If-Match: version
-        B->>DB: 21 · Валидация; проверка version
+        B->>DB: 21 · Валидация, проверка version
         alt [конфликт версий]
             B-->>P: 22 · 409 + current data
             P->>M: 23 · Показать конфликт
         else [версия актуальна]
-            B->>DB: 24 · UPDATE word; version++; audit
+            B->>DB: 24 · UPDATE word, version++, audit
             B-->>P: 25 · 200 {word}
             P->>M: 26 · Сохранено
         end
